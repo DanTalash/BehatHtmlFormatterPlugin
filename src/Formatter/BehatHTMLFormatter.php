@@ -598,6 +598,7 @@ class BehatHTMLFormatter implements Formatter {
                 //failed or passed
                 if($result instanceof ExecutedStepResult) {
                     $step->setDefinition($result->getStepDefinition());
+                    $step->setOutput($result->getCallResult()->getStdOut());
                     $exception = $result->getException();
                     if($exception) {
                         if ($exception instanceof PendingException) {
@@ -607,7 +608,6 @@ class BehatHTMLFormatter implements Formatter {
                             $this->failedSteps[] = $step;
                         }
                     } else {
-                        $step->setOutput($result->getCallResult()->getStdOut());
                         $this->passedSteps[] = $step;
                     }
                 }

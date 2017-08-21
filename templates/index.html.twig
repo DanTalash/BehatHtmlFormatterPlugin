@@ -198,13 +198,13 @@
                                                         <p style="padding-left:0.5em; overflow-x:scroll; white-space:nowrap; font-family:monospace">{{ argument | nl2br }}</p>
                                                     {% endfor %}
                                                 {% endif %}
+                                                {% if step.output is not null %}
+                                                    <br>
+                                                    <p style="padding-left:2em ; color:black"><pre>{{ step.output }}</pre></p>
+                                                {% endif %}
                                                 {% if step.exception is not null %}
                                                     <br>
                                                     <p style="padding-left:2em ; color:gray">({{ step.exception }})</p>
-                                                {% endif %}
-                                                {% if step.output is not null %}
-                                                    <br>
-                                                    <p style="padding-left:2em ; color:black">| {{ step.output }}</p>
                                                 {% endif %}
                                                 {% if printLoopBreak is not null and ( loop.index % scenario.getLoopSize ) == 0 and loop.last != true  %}
                                                     </li><li class="list-group-item break">
