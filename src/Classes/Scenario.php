@@ -36,6 +36,7 @@ class Scenario
      */
     private $steps;
     private $screenshotPath;
+    private $pageDumpPath;
 
     /**
      * @return mixed
@@ -200,6 +201,23 @@ class Scenario
     {
         if (file_exists($this->screenshotPath)) {
             return "file://" . realpath($this->screenshotPath);
+        }
+
+        return false;
+    }
+
+    public function setPageDumpPath($string)
+    {
+        $this->pageDumpPath = $string;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPageDumpPath()
+    {
+        if (file_exists($this->pageDumpPath)) {
+            return "file://" . realpath($this->pageDumpPath);
         }
 
         return false;

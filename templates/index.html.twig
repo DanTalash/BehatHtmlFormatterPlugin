@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8">
@@ -180,6 +180,9 @@
                                             {% for tag in scenario.tags %}
                                                 <span class="badge">{{ tag }}</span>
                                             {% endfor %}
+                                            {% if scenario.getPageDumpPath() %}
+                                            <a class="label label-default" href="{{ scenario.getPageDumpPath() }}" target="_blank">Page Dump</a>
+                                            {% endif %}
                                             {% if scenario.getScreenshotPath() %}
                                             <a class="label label-default" href="{{ scenario.getScreenshotPath() }}" target="_blank">Screenshot</a>
                                             {% endif %}

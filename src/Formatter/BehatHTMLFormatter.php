@@ -475,6 +475,13 @@ class BehatHTMLFormatter implements Formatter {
             preg_replace('/\W/', '', $event->getFeature()->getTitle()) . '/'.
             preg_replace('/\W/', '', $event->getScenario()->getTitle()) . '.png'
         );
+
+        $scenario->setPageDumpPath(
+            $this->printer->getOutputPath() .
+            '/assets/html/' .
+            preg_replace('/\W/', '', $event->getFeature()->getTitle()) . '/'.
+            preg_replace('/\W/', '', $event->getScenario()->getTitle()) . '.html'
+        );
         $this->currentScenario = $scenario;
 
         $print = $this->renderer->renderBeforeScenario($this);
