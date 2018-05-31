@@ -42,7 +42,6 @@
         </div>
         <div id="navbar" class="navbar-collapse collapse">
             <ul class="nav navbar-nav">
-                {#<li class="active"><a href="#">Home</a></li>#}
             </ul>
         </div>
         <!--/.nav-collapse -->
@@ -197,9 +196,18 @@
                                             <li class="list-group-item alert alert-{% if step.isPassed %}success{% elseif step.isSkipped %}info{% elseif step.isPending %}warning{% else %}danger{% endif %}">
                                                 <b>{{ step.keyword }}</b> {{ step.text }}
                                                 {% if printStepArgs is not null %}
-                                                    {% for argument in step.arguments %}
-                                                        <p style="padding-left:0.5em; overflow-x:scroll; white-space:nowrap; font-family:monospace">{{ argument | nl2br }}</p>
-                                                    {% endfor %}
+                                                    {% if step.arguments is not null %}
+                                                        <table style="border: 1px solid; margin: 10px; font-family:monospace">
+                                                          <tbody>
+                                                        {% for name, argument in step.arguments %}
+		                                                        <tr> 
+			                                                        <td style="padding: 5px; border-right: 1px solid;">{{ name | nl2br }}</td>
+			                                                        <td style="padding: 5px; border-right: 1px solid;">{{ argument | nl2br }}</td>
+    	                                                        </tr>
+                                                        {% endfor %}
+	                                                       </tbody>
+                                                        </table>
+                                                    {% endif %}
                                                 {% endif %}
                                                 {% if step.output is not null %}
                                                     <br>
@@ -213,9 +221,6 @@
                                                     </li><li class="list-group-item break">
                                                 {% endif %}
                                             </li>
-                                            {#<div class="bs-callout bs-callout-{% if step.passed %}success{% else %}danger{% endif %}" id="callout-collapse-accessibility">#}
-                                            {#<b>{{ step.keyword }}</b> {{ step.text }}#}
-                                            {#</div>#}
                                         {% endfor %}
                                     </ul>
                                 </div>

@@ -12,6 +12,7 @@ use Behat\Behat\EventDispatcher\Event\BeforeScenarioTested;
 use Behat\Behat\Tester\Exception\PendingException;
 use Behat\Behat\Tester\Result\ExecutedStepResult;
 use Behat\Behat\Tester\Result\StepResult;
+use Behat\Gherkin\Node\TableNode;
 use Behat\Testwork\Counter\Memory;
 use Behat\Testwork\Counter\Timer;
 use Behat\Testwork\EventDispatcher\Event\AfterExerciseCompleted;
@@ -588,7 +589,12 @@ class BehatHTMLFormatter implements Formatter {
         if ($event->getStep()->hasArguments()){
             $object = $this->getObject($event->getStep()->getArguments());
             $step->setArgumentType($object->getNodeType());
-            $step->setArguments($object);
+
+            if ($object instanceof TableNode) {
+                $step->setArguments($object->getRowsHash());
+            } else {
+                $step->setArguments($object);
+            }
         }
 
         //What is the result of this step ?
