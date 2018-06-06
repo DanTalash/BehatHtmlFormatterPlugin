@@ -587,7 +587,7 @@ class BehatHTMLFormatter implements Formatter {
             $step->setArgumentType($object->getNodeType());
 
             if ($object instanceof TableNode) {
-                $step->setArguments($object->getRowsHash());
+                $step->setArguments($object->getRows());
             } else {
                 $step->setArguments($object);
             }

@@ -202,10 +202,10 @@
                                                     {% if step.arguments is not null %}
                                                         <table style="border: 1px solid; margin: 10px; font-family:monospace">
                                                           <tbody>
-                                                        {% for name, argument in step.arguments %}
+                                                        {% for argument in step.arguments %}
 		                                                        <tr> 
-			                                                        <td style="padding: 5px; border-right: 1px solid;">{{ name | nl2br }}</td>
-			                                                        <td style="padding: 5px; border-right: 1px solid;">{{ argument | nl2br }}</td>
+			                                                        <td style="padding: 5px; border-right: 1px solid;">{{ argument.key | nl2br }}</td>
+			                                                        <td style="padding: 5px; border-right: 1px solid;">{{ argument.value | nl2br }}</td>
     	                                                        </tr>
                                                         {% endfor %}
 	                                                       </tbody>

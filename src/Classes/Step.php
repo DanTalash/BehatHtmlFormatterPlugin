@@ -84,7 +84,24 @@ class Step
      */
     public function setArguments($arguments)
     {
-        $this->arguments = $arguments;
+        $converted = [];
+
+        if (count($arguments)) {
+            $firstKey = $arguments[0]['key'] ?? false;
+
+            if ($firstKey === false) {
+                //We need to convert the arguments
+                foreach ($arguments as $arg) {
+                	$converted[] = [
+                        'key'   => $arg[0],
+                        'value' => $arg[1]
+                    ];
+                }
+                
+            }
+        }
+
+        $this->arguments = $converted;
     }
 
     /**
