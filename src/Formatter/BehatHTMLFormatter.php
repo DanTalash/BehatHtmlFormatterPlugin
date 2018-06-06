@@ -470,19 +470,15 @@ class BehatHTMLFormatter implements Formatter {
         $scenario->setTags($event->getScenario()->getTags());
         $scenario->setLine($event->getScenario()->getLine());
         $scenario->setScreenshotName($event->getScenario()->getTitle());
-        $scenario->setScreenshotPath(
-            $this->printer->getOutputPath() .
-            '/assets/screenshots/' .
-            preg_replace('/\W/', '', $event->getFeature()->getTitle()) . '/'.
-            preg_replace('/\W/', '', $event->getScenario()->getTitle()) . '.png'
-        );
 
-        $scenario->setPageDumpPath(
-            $this->printer->getOutputPath() .
-            '/assets/html/' .
+        $outputPath = $this->printer->getOutputPath() . '/assets/%s/' .
             preg_replace('/\W/', '', $event->getFeature()->getTitle()) . '/'.
-            preg_replace('/\W/', '', $event->getScenario()->getTitle()) . '.html'
-        );
+            preg_replace('/\W/', '', $event->getScenario()->getTitle()) . '%s';
+
+        $scenario->setScreenshotPath(sprintf($outputPath, 'screenshots', '.png'));
+        $scenario->getPageDumpPath(sprintf($outputPath, 'html', '.png'));
+        $scenario->setArtefactsPath(sprintf($outputPath, 'artefacts', '/'));
+
         $this->currentScenario = $scenario;
 
         $print = $this->renderer->renderBeforeScenario($this);

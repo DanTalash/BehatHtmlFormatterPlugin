@@ -185,6 +185,9 @@
                                             {% if scenario.getScreenshotPath() %}
                                             <a class="label label-default" href="{{ scenario.getScreenshotPath() }}" target="_blank">Screenshot</a>
                                             {% endif %}
+                                            {% for artefact in scenario.getArtefactsList() %}
+                                                <a class="label label-default" href="{{ artefact.path }}" target="_blank">{{ artefact.filename }}</a>
+                                            {% endfor %}
                                         </div>
                                     </h4>
                                 </div>

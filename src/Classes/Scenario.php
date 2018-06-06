@@ -37,6 +37,7 @@ class Scenario
     private $steps;
     private $screenshotPath;
     private $pageDumpPath;
+    private $artefactsPath;
 
     /**
      * @return mixed
@@ -200,7 +201,7 @@ class Scenario
     public function getScreenshotPath()
     {
         if (file_exists($this->screenshotPath)) {
-            return "file://" . realpath($this->screenshotPath);
+            return $this->getRelativePath($this->screenshotPath);
         }
 
         return false;
@@ -217,9 +218,60 @@ class Scenario
     public function getPageDumpPath()
     {
         if (file_exists($this->pageDumpPath)) {
-            return "file://" . realpath($this->pageDumpPath);
+            return $this->getRelativePath($this->pageDumpPath);
         }
 
         return false;
+    }
+
+    public function setArtefactsPath($string)
+    {
+        $this->artefactsPath = $string;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getArtefactsPath()
+    {
+        return $this->artefactsPath;
+    }
+
+    /**
+     * @return array[]
+     */
+    public function getArtefactsList()
+    {
+        $out = [];
+
+        if (is_dir($this->artefactsPath)) {
+            $files = scandir($this->artefactsPath);
+            $basePath = realpath($this->artefactsPath);
+            $basePath = $this->getRelativePath($basePath);
+
+            for ($i = 2, $count = count($files); $i < $count; $i++) {
+                $fileName = $files[$i];
+            	$out[] = [
+                    'filename' => $fileName,
+                    'path' => "{$basePath}/{$fileName}"
+                ];
+            }
+        }
+
+        return $out;
+    }
+
+
+    public function getRelativePath($path) {
+        //Quick solution: looking for last location of /assets in path and removing everything before.
+        //This will break if the assets folder ever gets renamed. 
+
+        //TODO: A proper solution.
+
+        $location = strrpos($path, 'assets');
+        $relative = substr($path, $location);
+        $converted = str_replace('\\', '//', $relative);
+
+        return $converted;
     }
 }
