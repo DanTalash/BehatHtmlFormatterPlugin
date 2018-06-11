@@ -474,13 +474,15 @@ class BehatHTMLFormatter implements Formatter {
         $featureTitle = preg_replace('/\W/', '', $event->getFeature()->getTitle());
         $scenarioTitle = preg_replace('/\W/', '', $event->getScenario()->getTitle());
 
-        $basePath = $this->printer->getOutputPath();
+        $basePath = realpath($this->printer->getOutputPath());
 
-        $outputPath = "{$basePath}/assets/%s/{$featureTitle}/{$scenarioTitle}%s";
+        if ($basePath) {
+            $outputPath = "{$basePath}/assets/%s/{$featureTitle}/{$scenarioTitle}%s";
 
-        $scenario->setScreenshotPath(sprintf($outputPath, 'screenshots', '.png'));
-        $scenario->getPageDumpPath(sprintf($outputPath, 'html', '.png'));
-        $scenario->setArtefactsPath("{$basePath}/assets/artefacts/" . md5("{$featureTitle}/{$scenarioTitle}") . DIRECTORY_SEPARATOR);
+            $scenario->setScreenshotPath(sprintf($outputPath, 'screenshots', '.png'));
+            $scenario->setPageDumpPath(sprintf($outputPath, 'html', '.html'));
+            $scenario->setArtefactsPath("{$basePath}/assets/artefacts/" . md5("{$featureTitle}/{$scenarioTitle}") . DIRECTORY_SEPARATOR);
+        }
 
         $this->currentScenario = $scenario;
 
