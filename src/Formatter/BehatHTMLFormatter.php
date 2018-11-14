@@ -198,6 +198,8 @@ class BehatHTMLFormatter implements Formatter {
             'tester.suite_tested.after'        => 'onAfterSuiteTested',
             'tester.feature_tested.before'     => 'onBeforeFeatureTested',
             'tester.feature_tested.after'      => 'onAfterFeatureTested',
+            'tester.example_tested.before'     => 'onBeforeExampleTested',
+            'tester.example_tested.after'      => 'onAfterExampleTested',
             'tester.scenario_tested.before'    => 'onBeforeScenarioTested',
             'tester.scenario_tested.after'     => 'onAfterScenarioTested',
             'tester.outline_tested.before'     => 'onBeforeOutlineTested',
@@ -460,6 +462,23 @@ class BehatHTMLFormatter implements Formatter {
         $this->printer->writeln($print);
     }
 
+
+    /**
+     * @param BeforeScenarioTested $event
+     */
+    public function onBeforeExampleTested(BeforeScenarioTested $event)
+    {
+        $this->onBeforeScenarioTested($event);
+    }
+
+    /**
+     * @param AfterScenarioTested $event
+     */
+    public function onAfterExampleTested(AfterScenarioTested $event)
+    {
+        $this->onAfterScenarioTested($event);
+    }
+
     /**
      * @param BeforeScenarioTested $event
      */
@@ -477,6 +496,11 @@ class BehatHTMLFormatter implements Formatter {
         $basePath = realpath($this->printer->getOutputPath());
 
         if ($basePath) {
+            if ($event->getScenario() instanceof \Behat\Gherkin\Node\ExampleNode) {
+                $tokens = $event->getScenario()->getTokens();
+                $scenarioTitle = md5(json_encode($tokens ?? []));
+            }
+
             $outputPath = "{$basePath}/assets/%s/{$featureTitle}/{$scenarioTitle}%s";
 
             $scenario->setScreenshotPath(sprintf($outputPath, 'screenshots', '.png'));
