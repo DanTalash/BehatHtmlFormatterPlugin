@@ -165,6 +165,12 @@ class BehatHTMLFormatter implements Formatter {
      */
     private $skippedSteps;
 
+    /**
+     * @var bool
+     */
+    private $exampleNode = false;
+
+
     //</editor-fold>
 
     //<editor-fold desc="Formatter functions">
@@ -397,7 +403,6 @@ class BehatHTMLFormatter implements Formatter {
      */
     public function onAfterExercise(AfterExerciseCompleted $event)
     {
-
         $this->timer->stop();
 
         $print = $this->renderer->renderAfterExercise($this);
@@ -484,23 +489,38 @@ class BehatHTMLFormatter implements Formatter {
      */
     public function onBeforeScenarioTested(BeforeScenarioTested $event)
     {
+        $behatScenario = $event->getScenario();
         $scenario = new Scenario();
-        $scenario->setName($event->getScenario()->getTitle());
-        $scenario->setTags($event->getScenario()->getTags());
-        $scenario->setLine($event->getScenario()->getLine());
-        $scenario->setScreenshotName($event->getScenario()->getTitle());
+        $scenario->setName($behatScenario->getTitle());
+        $scenario->setTags($behatScenario->getTags());
+        $scenario->setLine($behatScenario->getLine());
+        $scenario->setScreenshotName($behatScenario->getTitle());
 
         $featureTitle = preg_replace('/\W/', '', $event->getFeature()->getTitle());
-        $scenarioTitle = preg_replace('/\W/', '', $event->getScenario()->getTitle());
+        $scenarioTitle = preg_replace('/\W/', '', $behatScenario->getTitle());
 
         $basePath = realpath($this->printer->getOutputPath());
 
-        if ($basePath) {
-            if ($event->getScenario() instanceof \Behat\Gherkin\Node\ExampleNode) {
-                $tokens = $event->getScenario()->getTokens();
-                $scenarioTitle = md5(json_encode($tokens ?? []));
+        if ($behatScenario instanceof \Behat\Gherkin\Node\ExampleNode) {
+            $tokens = $behatScenario->getTokens();
+            $scenarioTitle = md5(json_encode($tokens ?? []));
+
+            $scenarioName = $behatScenario->getOutlineTitle();
+            $exampleParts = [];
+
+            foreach ($tokens as $key => $value) {
+                $exampleParts[] = "{$key}: {$value}";
             }
 
+            $scenarioName .= ' (' . implode(', ', $exampleParts) . ')';
+            $scenario->setName($scenarioName);
+
+            $this->exampleNode = true;
+        } else {
+            $this->exampleNode = false;
+        }
+
+        if ($basePath) {
             $outputPath = "{$basePath}/assets/%s/{$featureTitle}/{$scenarioTitle}%s";
 
             $scenario->setScreenshotPath(sprintf($outputPath, 'screenshots', '.png'));
@@ -563,6 +583,10 @@ class BehatHTMLFormatter implements Formatter {
      */
     public function onAfterOutlineTested(AfterOutlineTested $event)
     {
+        if ($this->exampleNode) {
+            return;
+        }
+
         $scenarioPassed = $event->getTestResult()->isPassed();
 
         if ($scenarioPassed) {
