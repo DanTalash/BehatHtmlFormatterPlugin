@@ -503,7 +503,8 @@ class BehatHTMLFormatter implements Formatter {
 
         if ($behatScenario instanceof \Behat\Gherkin\Node\ExampleNode) {
             $tokens = $behatScenario->getTokens();
-            $scenarioTitle = md5(json_encode($tokens ?? []));
+
+            $scenarioTitle = md5(json_encode($tokens ?? []) . $behatScenario->getOutlineTitle());
 
             $scenarioName = $behatScenario->getOutlineTitle();
             $exampleParts = [];
